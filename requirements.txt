@@ -1,0 +1,9 @@
+spacy
+nltk
+stanford-corenlp
+scikit-learn
+seaborn
+numpy
+matplotlib
+tensorflow
+tensorflow-hub
