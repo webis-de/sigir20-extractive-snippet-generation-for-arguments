@@ -7,8 +7,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from collections import defaultdict
 import pickle
-from src import RidgeRegression
-
 
 # import utils
 
