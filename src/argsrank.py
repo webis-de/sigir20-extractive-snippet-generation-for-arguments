@@ -64,7 +64,7 @@ class ArgsRank:
         # Create graph and finalize (optional but recommended).
         g = tf.Graph()
         with g.as_default():
-          text_input = tf.placeholder(dtype=tf.string, shape=[None])
+          self.text_input = tf.placeholder(dtype=tf.string, shape=[None])
           embed = hub.Module("https://tfhub.dev/google/universal-sentence-encoder/2")
           self.embed_result = embed(self.text_input)
           init_op   = tf.group([tf.global_variables_initializer(), tf.tables_initializer()])
@@ -289,7 +289,7 @@ class ArgsRank:
             #message_embedding = self.run_and_plot(session, similarity_input_placeholder, messages,
             #                                      similarity_message_encodings)
 
-            message_embedding = session.run(self.embed_result, feed_dict={self.text_input: messages})
+            message_embedding = self.tf_session.run(self.embed_result, feed_dict={self.text_input: messages})
 
             sim = np.inner(message_embedding, message_embedding)
             sim_message = self.normalize_by_rowsum(sim)
