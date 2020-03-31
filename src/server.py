@@ -11,7 +11,7 @@ from argsrank import *
 app = Flask(__name__)
 
 script_dir = os.path.dirname(__file__)
-stored_snippets = open(os.path.join(script_dir, "../data/snippets.txt"))
+stored_snippets = json.load(open(os.path.join(script_dir, "../data/snippets.txt")))
 snippet_gen_app = ArgsRank()
 
 @app.route('/')
