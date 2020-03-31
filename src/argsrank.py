@@ -286,9 +286,6 @@ class ArgsRank:
             for argument in cluster:
                 messages = messages + argument.sentences
 
-            #message_embedding = self.run_and_plot(session, similarity_input_placeholder, messages,
-            #                                      similarity_message_encodings)
-
             message_embedding = self.tf_session.run(self.embed_result, feed_dict={self.text_input: messages})
 
             sim = np.inner(message_embedding, message_embedding)
