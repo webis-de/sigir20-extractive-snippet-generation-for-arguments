@@ -61,8 +61,18 @@ class ArgsRank:
         # self.tfidf_vec = pickle.load(open("objects/tfidf_arg.p", "rb"))
         # self.count_vec = pickle.load(open("objects/count_arg.p", "rb"))
 
-        module_url = "https://tfhub.dev/google/universal-sentence-encoder/2"
-        self.embed = hub.Module(module_url)
+        # Create graph and finalize (optional but recommended).
+        g = tf.Graph()
+        with g.as_default():
+          text_input = tf.placeholder(dtype=tf.string, shape=[None])
+          embed = hub.Module("https://tfhub.dev/google/universal-sentence-encoder/2")
+          self.embed_result = embed(self.text_input)
+          init_op   = tf.group([tf.global_variables_initializer(), tf.tables_initializer()])
+        g.finalize()
+
+        self.tf_session = tf.Session(graph=g)
+        self.tf_session.run(init_op)
+
 
     def plot_similarity(self, labels, features, rotation):
         corr = np.inner(features, features)
@@ -261,63 +271,66 @@ class ArgsRank:
         :param clusters:
         :return:
         """
-        tf.compat.v1.reset_default_graph()
-        start = time.time()
+        #tf.compat.v1.reset_default_graph()
+        #start = time.time()
         messages = []
 
        
-        similarity_input_placeholder = tf.placeholder(tf.string, shape=(None))
-        similarity_message_encodings = self.embed(similarity_input_placeholder)
-        with tf.Session() as session:
-            session.run(tf.global_variables_initializer())
-            session.run(tf.tables_initializer())
-            for idx, cluster in enumerate(clusters):
-                messages = []
-                for argument in cluster:
-                    messages = messages + argument.sentences
+        #similarity_input_placeholder = tf.placeholder(tf.string, shape=(None))
+        #similarity_message_encodings = self.embed(similarity_input_placeholder)
+        #with tf.Session() as session:
+            #session.run(tf.global_variables_initializer())
+            #session.run(tf.tables_initializer())
+        for idx, cluster in enumerate(clusters):
+            messages = []
+            for argument in cluster:
+                messages = messages + argument.sentences
 
-                message_embedding = self.run_and_plot(session, similarity_input_placeholder, messages,
-                                                      similarity_message_encodings)
+            #message_embedding = self.run_and_plot(session, similarity_input_placeholder, messages,
+            #                                      similarity_message_encodings)
 
-                sim = np.inner(message_embedding, message_embedding)
-                sim_message = self.normalize_by_rowsum(sim)
-                matrix = self.add_tp_ratio(cluster)
-                if (self.WEIGHT_SYN != 0):
-                    self.add_syn_similarity(matrix, cluster, self.WEIGHT_SYN)
-                M = np.array(sim_message) * (1 - self.d) + np.array(matrix) * self.d
-                p = self.power_method(M, 0.0000001)
-                end = time.time()
-                x = 0
-                for i in range(len(cluster)):
-                    if cluster[i].conclusion is not None:
+            message_embedding = session.run(self.embed_result, feed_dict={self.text_input: messages})
 
-                        conclusion = self.run_and_plot(session, similarity_input_placeholder, [cluster[i].conclusion],
-                                                       similarity_message_encodings)
-                    if not cluster[i].score:
-                        score_exists = False
+            sim = np.inner(message_embedding, message_embedding)
+            sim_message = self.normalize_by_rowsum(sim)
+            matrix = self.add_tp_ratio(cluster)
+            if (self.WEIGHT_SYN != 0):
+                self.add_syn_similarity(matrix, cluster, self.WEIGHT_SYN)
+            
+            M = np.array(sim_message) * (1 - self.d) + np.array(matrix) * self.d
+            p = self.power_method(M, 0.0000001)
+
+            x = 0
+            for i in range(len(cluster)):
+                if cluster[i].conclusion is not None:
+
+                    conclusion = self.run_and_plot(session, similarity_input_placeholder, [cluster[i].conclusion],
+                                                   similarity_message_encodings)
+                if not cluster[i].score:
+                    score_exists = False
+                else:
+                    score_exists = True
+                for j in range(len(cluster[i].sentences)):
+                    if score_exists:
+                        cluster[i].score[j] += (p[x][0] * (1 - self.WEIGHT_SYN))
+                        cluster[i].score[j] = cluster[i].score[j] / 2
+
                     else:
-                        score_exists = True
-                    for j in range(len(cluster[i].sentences)):
-                        if score_exists:
-                            cluster[i].score[j] += (p[x][0] * (1 - self.WEIGHT_SYN))
-                            cluster[i].score[j] = cluster[i].score[j] / 2
-
-                        else:
-                            cluster[i].score.append(p[x][0] * (1 - self.WEIGHT_SYN))
-                        x += 1
-                    if (len(cluster[i].score) > 1):
-                        cluster[i].score = list(
-                            (cluster[i].score - min(cluster[i].score)) / (
-                                    max(cluster[i].score) - min(cluster[i].score)))
-                    else:
-                        cluster[i].score = [1]
-                    for j in range(len(cluster[i].sentences)):
-                        if  cluster[i].conclusion is not None:
-                            c_sim_score = self.c_simw * np.inner(conclusion,
-                                                             self.run_and_plot(session, similarity_input_placeholder,
-                                                                               [cluster[i].sentences[j]],
-                                                                               similarity_message_encodings))
-                            cluster[i].score[j] += c_sim_score[0][0]
+                        cluster[i].score.append(p[x][0] * (1 - self.WEIGHT_SYN))
+                    x += 1
+                if (len(cluster[i].score) > 1):
+                    cluster[i].score = list(
+                        (cluster[i].score - min(cluster[i].score)) / (
+                                max(cluster[i].score) - min(cluster[i].score)))
+                else:
+                    cluster[i].score = [1]
+                for j in range(len(cluster[i].sentences)):
+                    if  cluster[i].conclusion is not None:
+                        c_sim_score = self.c_simw * np.inner(conclusion,
+                                                         self.run_and_plot(session, similarity_input_placeholder,
+                                                                           [cluster[i].sentences[j]],
+                                                                           similarity_message_encodings))
+                        cluster[i].score[j] += c_sim_score[0][0]
                 # self.add_syn_similarity(matrix, cluster, self.WEIGHT_SYN)
 
     def slice_it(self, li, cols):
