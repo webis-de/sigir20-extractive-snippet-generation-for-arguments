@@ -271,16 +271,8 @@ class ArgsRank:
         :param clusters:
         :return:
         """
-        #tf.compat.v1.reset_default_graph()
-        #start = time.time()
         messages = []
 
-       
-        #similarity_input_placeholder = tf.placeholder(tf.string, shape=(None))
-        #similarity_message_encodings = self.embed(similarity_input_placeholder)
-        #with tf.Session() as session:
-            #session.run(tf.global_variables_initializer())
-            #session.run(tf.tables_initializer())
         for idx, cluster in enumerate(clusters):
             messages = []
             for argument in cluster:
