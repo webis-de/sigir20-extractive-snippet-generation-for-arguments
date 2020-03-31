@@ -61,6 +61,9 @@ class ArgsRank:
         # self.tfidf_vec = pickle.load(open("objects/tfidf_arg.p", "rb"))
         # self.count_vec = pickle.load(open("objects/count_arg.p", "rb"))
 
+        module_url = "https://tfhub.dev/google/universal-sentence-encoder/2"
+        self.embed = hub.Module(module_url)
+
     def plot_similarity(self, labels, features, rotation):
         corr = np.inner(features, features)
         print(corr.shape)
@@ -258,32 +261,13 @@ class ArgsRank:
         :param clusters:
         :return:
         """
-        tf.reset_default_graph()
+        tf.compat.v1.reset_default_graph()
         start = time.time()
         messages = []
 
-        # for argument in cluster:
-        #     messages = messages + argument.sentences
-        #     args_sentences.append(argument.sentences)
-        #    add_tp_ratio(matrix)
-        #   tf.logging.set_verbosity(tf.logging.ERROR)
-        # with tf.Session() as session:
-        #   session.run([tf.global_variables_initializer(), tf.tables_initializer()])
-        #   message_embeddings = session.run(embed(messages))
-        #
-        #   for i, message_embedding in enumerate(np.array(message_embeddings).tolist()):
-        #       print("Message: {}".format(messages[i]))
-        #       print("Embedding size: {}".format(len(message_embedding)))
-        #       message_embedding_snippet = ", ".join(
-        #           (str(x) for x in message_embedding[:3]))
-        #       print("Embedding: [{}, ...]\n".format(message_embedding_snippet))
-
-        module_url = "https://tfhub.dev/google/universal-sentence-encoder/2"
-        embed = hub.Module(module_url)
-        # similarity_input_placeholder = tf.placeholder(tf.string, shape=(None))
-        # similarity_message_encodings = embed(similarity_input_placeholder)
+       
         similarity_input_placeholder = tf.placeholder(tf.string, shape=(None))
-        similarity_message_encodings = embed(similarity_input_placeholder)
+        similarity_message_encodings = self.embed(similarity_input_placeholder)
         with tf.Session() as session:
             session.run(tf.global_variables_initializer())
             session.run(tf.tables_initializer())
