@@ -5,6 +5,6 @@ scikit-learn
 seaborn
 numpy
 matplotlib
-tensorflow
+tensorflow==1.14.0
 tensorflow-hub
 flask

@@ -30,6 +30,7 @@ def api_get_snippets():
         arg.set_sentences(argument["text"])
         cluster.append(arg)
 
+    print('generate snippets...')
     snippets = snippet_gen_app.generate_snippet(stored_snippets, cluster)
 
     js = json.dumps(snippets)
