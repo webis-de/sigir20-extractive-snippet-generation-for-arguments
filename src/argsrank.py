@@ -149,7 +149,7 @@ class ArgsRank:
             for argument in cluster:
                 messages = messages + argument.sentences
 
-            message_embedding = self.embed(messages) #self.tf_session.run(self.embed_result, feed_dict={self.text_input: messages})
+            message_embedding = [ message.numpy() for message in self.embed(messages)] #self.tf_session.run(self.embed_result, feed_dict={self.text_input: messages})
 
             sim = np.inner(message_embedding, message_embedding)
             sim_message = self.normalize_by_rowsum(sim)
