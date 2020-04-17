@@ -53,4 +53,4 @@ def init_app():
 #curl -H "Content-Type: application/json" --data '{"arguments":[{"id": 123, "text": "text"}]}' http://127.0.0.1:5000/snippets
 if __name__ == '__main__':
     #init_app()
-    app.run(debug=True)
+    app.run(debug=False)
