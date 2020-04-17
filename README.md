@@ -3,7 +3,7 @@
 ### Building docker image:
 docker build . -t args_snippet_gen
 
-nvidia-docker run -u $(id -u):$(id -g) --name args_rank -it -v /home/miladalshomary/Development/argument-snippet-generation/argsrank:/usr/local/argsrank-new args_snippet_gen:latest
+nvidia-docker run -u $(id -u):$(id -g) --name args_rank -it -v /home/miladalshomary/Development/argument-snippet-generation/argsrank:/usr/local/argsrank-new args_snippet_gen:latest bash
 
 ### Sending http request to generate snippets:
 

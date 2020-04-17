@@ -48,16 +48,17 @@ class ArgsRank:
 
         # Create graph and finalize (optional but recommended).
 
-        g = tf.Graph()
-        with g.as_default():
-          self.text_input = tf.placeholder(dtype=tf.string, shape=[None])
-          embed = hub.Module("https://tfhub.dev/google/universal-sentence-encoder/2")
-          self.embed_result = embed(self.text_input)
-          init_op   = tf.group([tf.global_variables_initializer(), tf.tables_initializer()])
-        g.finalize()
+        # g = tf.Graph()
+        # with g.as_default():
+        #   self.text_input = tf.placeholder(dtype=tf.string, shape=[None])
+        #   embed = hub.Module("https://tfhub.dev/google/universal-sentence-encoder/2")
+        #   self.embed_result = embed(self.text_input)
+        #   init_op   = tf.group([tf.global_variables_initializer(), tf.tables_initializer()])
+        # g.finalize()
 
-        self.tf_session = tf.Session(graph=g)
-        self.tf_session.run(init_op)
+        # self.tf_session = tf.Session(graph=g)
+        # self.tf_session.run(init_op)
+        self.embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 
 
 
@@ -148,7 +149,7 @@ class ArgsRank:
             for argument in cluster:
                 messages = messages + argument.sentences
 
-            message_embedding = self.tf_session.run(self.embed_result, feed_dict={self.text_input: messages})
+            message_embedding = self.embed(messages) #self.tf_session.run(self.embed_result, feed_dict={self.text_input: messages})
 
             sim = np.inner(message_embedding, message_embedding)
             sim_message = self.normalize_by_rowsum(sim)
