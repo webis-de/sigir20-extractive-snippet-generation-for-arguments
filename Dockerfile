@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:devel-py3
+FROM tensorflow/tensorflow:latest-gpu
 COPY . /usr/local/argsrank/
 WORKDIR /usr/local/argsrank
 RUN pip install -r requirements.txt
