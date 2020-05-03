@@ -39,18 +39,6 @@ def api_get_snippets():
     return resp
 
 
-def init_app():
-    script_dir = os.path.dirname(__file__)
-
-    with app.app_context():
-
-        stored_snippets = open(os.path.join(script_dir, "../data/snippets.txt"))
-        snippet_gen_app = ArgsRank()
-
-        g.stored_snippets = stored_snippets
-        g.snippet_gen_app = snippet_gen_app
-
 #curl -H "Content-Type: application/json" --data '{"arguments":[{"id": 123, "text": "text"}]}' http://127.0.0.1:5000/snippets
 if __name__ == '__main__':
-    #init_app()
     app.run(debug=False)
