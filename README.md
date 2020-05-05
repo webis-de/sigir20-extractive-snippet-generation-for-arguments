@@ -3,9 +3,9 @@
 ### Building docker image:
 docker build . -t args_snippet_gen
 
-nvidia-docker run -u $(id -u):$(id -g) --name args_rank -it args_snippet_gen:latest bash
+nvidia-docker run -u $(id -u):$(id -g) --name args-snippet-generation -p 5000:5000 -it args_snippet_gen:latest bash
 
-Inside docker image run: CUDA_VISIBLE_DEVICES=0 python src/server.py
+Inside docker image run: CUDA_VISIBLE_DEVICES=5 python src/server.py
 
 ### Sending http request to generate snippets:
 
