@@ -225,6 +225,14 @@ class ArgsRank:
 def init_snippet_gen_app():
     g.snippet_gen_app = ArgsRank()
 
+
+def get_stored_snippets():
+    if 'stored_snippets' not in g:
+        script_dir = os.path.dirname(__file__)
+        g.stored_snippets = json.load(open(os.path.join(script_dir, "./data/snippets.txt")))
+
+    return g.stored_snippets
+
 def get_snippet_gen_app():
     if 'snippet_gen_app' not in g:
         g.snippet_gen_app = ArgsRank()

@@ -6,7 +6,7 @@ from flask import request
 from flask import Response
 
 from argsrank.lib import argsrank
-from argsrank.lib import argument
+from argsrank.lib.argument import Argument
 
 def create_app(test_config=None):
 
@@ -30,9 +30,6 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    print('initializing snippet generation app..')
-    argsrank.init_snippet_gen_app()
-
     @app.route('/')
     def api_root():
         return 'welcome'
@@ -43,14 +40,15 @@ def create_app(test_config=None):
 
         cluster = []
         for argument in json_arguments:
-            arg = argument.Argument()
+            arg = Argument()
             arg.premises= [{"text": argument["text"]}]
             arg.id = argument["id"]
             arg.set_sentences(argument["text"])
             cluster.append(arg)
 
         print('generate snippets...')
-        snippet_gen_app = argsRank.get_args_snippet_gen()
+        snippet_gen_app = argsrank.get_snippet_gen_app()
+        stored_snippets = argsrank.get_stored_snippets()
         snippets = snippet_gen_app.generate_snippet(stored_snippets, cluster)
 
         js = json.dumps(snippets)
