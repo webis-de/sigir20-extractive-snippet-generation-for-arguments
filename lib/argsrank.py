@@ -3,17 +3,14 @@ import re
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
 
-
 from sklearn.preprocessing import MinMaxScaler
 
-from src.Argument import Argument
 
+from flask import current_app, g
 
 
 class ArgsRank:
@@ -225,35 +222,11 @@ class ArgsRank:
                         indices[idx] = new_index
         return indices
 
-if __name__ == "__main__":
-    script_dir = os.path.dirname(__file__)
+def init_snippet_gen_app():
+    g.snippet_gen_app = ArgsRank()
 
+def get_snippet_gen_app():
+    if 'snippet_gen_app' not in g:
+        g.snippet_gen_app = ArgsRank()
 
-    argsRank = ArgsRank()
-
-    with open(os.path.join(script_dir, "../data/snippets.txt")) as json_file:
-        data = json.load(json_file)
-        while True:
-            input_data = sys.stdin.readline()
-            if input_data == "store":
-                with open(os.path.join(script_dir, "../src/snippets.txt")) as json_file:
-                    json.dump(data, json_file)
-            #input_data = "[{\"id\":\"0191\",\"text\":\"Abortion is wrong! Abortion Is gross! Abortion is MURDER!!!!\"},{\"id\":\"02391\",\"text\":\"This is a test. Let's look if this works.\"}]"
-            json_input = json.loads(input_data)
-            print(json_input)
-            cluster = []
-            for argument in json_input:
-                arg = Argument()
-                arg.premises= [{"text": argument["text"]}]
-                arg.id = argument["id"]
-                arg.set_sentences(argument["text"])
-                cluster.append(arg)
-
-            snippets = argsRank.generate_snippet(data, cluster)
-            # return the snippets
-            sys.stdout.write(json.dumps(snippets))
-            sys.stdout.write('\n')
-            sys.stdout.flush()
-
-
-
+    return g.snippet_gen_app
