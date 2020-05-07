@@ -229,7 +229,7 @@ def init_snippet_gen_app():
 def get_stored_snippets():
     if 'stored_snippets' not in g:
         script_dir = os.path.dirname(__file__)
-        g.stored_snippets = json.load(open(os.path.join(script_dir, "./data/snippets.txt")))
+        g.stored_snippets = json.load(open(os.path.join(script_dir, "../data/snippets.txt")))
 
     return g.stored_snippets
 

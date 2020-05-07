@@ -5,6 +5,12 @@ docker build . -t args_snippet_gen
 
 nvidia-docker run -u $(id -u):$(id -g) --name args-snippet-generation -p 5000:5000 -it args_snippet_gen:latest bash
 
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+export FLASK_APP=argsrank
+export FLASK_ENV=development
+CUDA_VISIBLE_DEVICES=5 flask run
+
 Inside docker image run: CUDA_VISIBLE_DEVICES=5 python src/server.py
 
 ### Sending http request to generate snippets:
