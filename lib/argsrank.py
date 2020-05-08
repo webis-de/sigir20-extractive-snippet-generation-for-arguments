@@ -185,41 +185,25 @@ class ArgsRank:
 
         indices = []
 
-        if len(sys.argv) > 1:
-            if sys.argv[1] == "regenerate":
-                snippets = []
-                self.sem_similarty_scoring([arg])
-                for a in arg:
-                    snippets.append(a.get_topK(2).tolist())
+        for a in arg:
+            if a.id in data:
+                indices.append(data[a.id])
+            else:
+                indices.append(None)
 
-                for idx, snippet in enumerate(snippets):
-                    index = []
+        if None in indices:
+            self.sem_similarty_scoring([arg])
+            for idx in range(len(indices)):
+                if indices[idx] is None:
+                    print(idx)
+                    snippet = arg[idx].get_topK(2).tolist()
+                    new_index = []
                     for sentence in snippet:
                         p = re.compile(sentence)
                         m = p.search(arg[idx].premises[0]["text"])
-                        index.append(list(m.span()))
-                    data[arg[idx].id] = index
-                    indices.append(index)
-        else:
-            for a in arg:
-                if a.id in data:
-                    indices.append(data[a.id])
-                else:
-                    indices.append(None)
-
-            if None in indices:
-                self.sem_similarty_scoring([arg])
-                for idx in range(len(indices)):
-                    if indices[idx] is None:
-                        print(idx)
-                        snippet = arg[idx].get_topK(2).tolist()
-                        new_index = []
-                        for sentence in snippet:
-                            p = re.compile(sentence)
-                            m = p.search(arg[idx].premises[0]["text"])
-                            new_index.append(list(m.span()))
-                        data[arg[idx].id] = new_index
-                        indices[idx] = new_index
+                        new_index.append(list(m.span()))
+                    data[arg[idx].id] = new_index
+                    indices[idx] = new_index
         return indices
 
 def init_snippet_gen_app():

@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import find_packages, setup
 
-setup(name='Distutils',
-      version='1.0',
-      description='Argument Snippet Generation',
-      author='Milad Alshomary',
-      author_email='milad.alshomary@mail.upb.de'
+setup(
+    name='argsrank',
+    version='1.0.0',
+    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=[
+        'flask',
+    ],
 )
