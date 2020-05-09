@@ -7,7 +7,7 @@ RUN pip install --upgrade pip
 RUN pip install -r argsrank/requirements.txt
 RUN [ "python", "-c", "import nltk; nltk.download('punkt', download_dir='/nltk_data')" ]
 RUN python -m spacy download en_core_web_sm
-RUN pip install .
+RUN pip install ./argsrank/
 RUN export LC_ALL=C.UTF-8
 RUN export LANG=C.UTF-8
 RUN export FLASK_APP=argsrank
