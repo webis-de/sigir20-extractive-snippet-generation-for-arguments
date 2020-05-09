@@ -4,7 +4,7 @@ EXPOSE 5000
 COPY . /usr/local/argsrank/
 WORKDIR /usr/local
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r argsrank/requirements.txt
 RUN [ "python", "-c", "import nltk; nltk.download('punkt', download_dir='/nltk_data')" ]
 RUN python -m spacy download en_core_web_sm
 RUN pip install .
