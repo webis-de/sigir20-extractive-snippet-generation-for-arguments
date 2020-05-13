@@ -8,6 +8,14 @@ from flask import Response
 from argsrank.lib import argsrank
 from argsrank.lib.argument import Argument
 
+
+def load_global_data():
+    global snippet_gen_app
+    global stored_snippets
+    
+    snippet_gen_app = argsrank.get_snippet_gen_app()
+    stored_snippets = argsrank.get_stored_snippets()
+
 def create_app(test_config=None):
 
     # create and configure the app
@@ -47,8 +55,6 @@ def create_app(test_config=None):
             cluster.append(arg)
 
         print('generate snippets...')
-        snippet_gen_app = argsrank.get_snippet_gen_app()
-        stored_snippets = argsrank.get_stored_snippets()
         snippets = snippet_gen_app.generate_snippet(stored_snippets, cluster)
 
         js = json.dumps(snippets)
