@@ -12,11 +12,15 @@ from argsrank.lib.argument import Argument
 def load_global_data():
     global snippet_gen_app
     global stored_snippets
-    
-    snippet_gen_app = argsrank.get_snippet_gen_app()
-    stored_snippets = argsrank.get_stored_snippets()
+
+    snippet_gen_app = argsrank.ArgsRank()
+
+    script_dir = os.path.dirname(__file__)
+    stored_snippets = json.load(open(os.path.join(script_dir, "./data/snippets.txt")))
 
 def create_app(test_config=None):
+
+    load_global_data()
 
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
