@@ -1,3 +1,21 @@
+
+# Paper: Extractive Snippet Generation for Arguments
+
+This is the code for the paper *Extractive Snippet Generation for Arguments*.
+
+Milad Alshomary, Nick Düsterhus, Henning Wachstmuth
+
+
+@InProceedings{elbaff:2020,
+  author =              {Milad Alshomary, Nick Düsterhus, Henning Wachstmuth},
+  booktitle =           {The 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+  month =               July,
+  publisher =           {SIGIR},
+  site =                {Xi'an, China},
+  title =               {{Extractive Snippet Generation for Arguments}},
+  year =                2020
+}
+
 # ArgsRank
 
 ### Building docker image:
