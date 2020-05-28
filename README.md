@@ -19,7 +19,7 @@ Milad Alshomary, Nick Düsterhus, Henning Wachstmuth
 # ArgsRank
 
 ### Running Code on Docker:
-    docker build . -t args_snippet_gen
+    docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) . -t args_snippet_gen
 
     nvidia-docker run -u $(id -u):$(id -g) --name args-snippet-generation -p 5000:5000 -it args_snippet_gen:latest bash
 
