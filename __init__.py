@@ -42,6 +42,13 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+
+
+    @app.before_request
+    def log_the_request():
+        app.logger.debug('Headers: %s', request.headers)
+        app.logger.debug('Body: %s', request.get_data())
+
     @app.route('/')
     def api_root():
         return 'welcome'

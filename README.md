@@ -23,7 +23,7 @@ Milad Alshomary, Nick Düsterhus, Henning Wachstmuth
 
     nvidia-docker run -u $(id -u):$(id -g) --name args-snippet-generation -p 5000:5000 -it args_snippet_gen:latest bash
 
-    RUN CUDA_VISIBLE_DEVICES=5 waitress-serve --listen=0.0.0.0:5000  --call 'argsrank:create_app'
+    RUN CUDA_VISIBLE_DEVICES=5 waitress-serve --listen=0.0.0.0:5000  --call 'argsrank:create_app' >info.log 2> error.log
 
 
 ### Sending http request to generate snippets:

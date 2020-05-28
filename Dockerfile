@@ -1,4 +1,12 @@
 FROM tensorflow/tensorflow:latest-gpu-py3
+
+ARG USER_ID
+ARG GROUP_ID
+
+RUN addgroup --gid $GROUP_ID user
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+USER user
+
 RUN  pip install --upgrade setuptools
 EXPOSE 5000
 COPY . /usr/local/argsrank/
