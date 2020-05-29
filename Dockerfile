@@ -9,9 +9,10 @@ ENV CONTAINER_USER=${CONTAINER_USER}
 ENV CONTAINER_UID=${CONTAINER_UID}
 ENV HOME_DIR=${HOME_DIR}
 
+RUN adduser --disabled-password --gecos '' ${CONTAINER_USER}
 
 RUN mkdir -p ${HOME_DIR}
-RUN chown -R  ${CONTAINER_USER} ${HOME_DIR}
+RUN chown -R ${CONTAINER_USER} ${HOME_DIR}
 
 RUN  pip install --upgrade setuptools
 EXPOSE 5000
