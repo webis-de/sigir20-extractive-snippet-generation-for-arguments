@@ -13,9 +13,6 @@ ENV HOME_DIR=${HOME_DIR}
 RUN mkdir -p ${HOME_DIR}
 
 
-RUN addgroup --gid $GROUP_ID user
-RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
-
 RUN  pip install --upgrade setuptools
 EXPOSE 5000
 COPY . ${HOME_DIR}/argsrank/
