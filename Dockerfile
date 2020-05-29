@@ -22,6 +22,6 @@ WORKDIR ${HOME_DIR}
 
 RUN pip install --upgrade pip
 RUN pip install -r argsrank/requirements.txt
-RUN [ "python", "-c", "import nltk; nltk.download('punkt', download_dir='/nltk_data')" ]
+RUN [ "python", "-c", "import nltk; nltk.download('punkt', download_dir='/usr/nltk_data')" ]
 RUN python -m spacy download en_core_web_sm
 RUN pip install ./argsrank/

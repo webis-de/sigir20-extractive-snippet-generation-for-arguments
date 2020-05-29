@@ -1,8 +1,8 @@
 from nltk.tokenize import sent_tokenize
 import numpy as np
 import re
+import nltk
 import corenlp
-
 
 class Argument:
 
