@@ -11,7 +11,7 @@ ENV HOME_DIR=${HOME_DIR}
 
 
 RUN mkdir -p ${HOME_DIR}
-
+RUN chown -R  ${CONTAINER_USER} ${HOME_DIR}
 
 RUN  pip install --upgrade setuptools
 EXPOSE 5000
