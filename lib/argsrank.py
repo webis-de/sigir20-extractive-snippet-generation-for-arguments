@@ -201,7 +201,9 @@ class ArgsRank:
                     for sentence in snippet:
                         p = re.compile(sentence)
                         m = p.search(arg[idx].premises[0]["text"])
-                        new_index.append(list(m.span()))
+                        #TODO sometimes m is been returned as None
+                        if m != None:
+                            new_index.append(list(m.span()))
                     data[arg[idx].id] = new_index
                     indices[idx] = new_index
         return indices

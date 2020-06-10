@@ -19,11 +19,9 @@ Milad Alshomary, Nick Düsterhus, Henning Wachstmuth
 # ArgsRank
 
 ### Running Code on Docker:
-    nvidia-docker build --build-arg=CONTAINER_USER=${D_USER} --build-arg=CONTAINER_UID=${D_UID} -t args_snippet_gen .
+    Execute   ./start.sh
 
-    nvidia-docker run -u $(id -u):$(id -g) --name args-snippet-generation -p 5000:5000 -it args_snippet_gen:latest bash
-
-    RUN CUDA_VISIBLE_DEVICES=1 waitress-serve --listen=0.0.0.0:5000  --call 'argsrank:create_app' >info.log 2> error.log
+    RUN CUDA_VISIBLE_DEVICES=2 waitress-serve --listen=0.0.0.0:5000  --call 'argsrank:create_app' >info.log 2> error.log
 
 
 ### Sending http request to generate snippets:
