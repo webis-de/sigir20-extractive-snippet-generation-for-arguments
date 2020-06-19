@@ -76,6 +76,10 @@ class ArgsRank:
             t = t + 1
             p_prev = p_t
             p_t = np.dot(M.T, p_t)
+            
+            if np.isnan(p_t).any():
+                break
+
             residual = np.linalg.norm(p_t - p_prev)
 
             if residual < epsilon:
@@ -199,11 +203,15 @@ class ArgsRank:
                     snippet = arg[idx].get_topK(2).tolist()
                     new_index = []
                     for sentence in snippet:
-                        p = re.compile(sentence)
-                        m = p.search(arg[idx].premises[0]["text"])
-                        #TODO sometimes m is been returned as None
-                        if m != None:
-                            new_index.append(list(m.span()))
+                        try:
+                            p = re.compile(sentence)
+                            m = p.search(arg[idx].premises[0]["text"])
+                            #TODO sometimes m is been returned as None
+                            if m != None:
+                                new_index.append(list(m.span()))
+                        except:
+                            print('Error occured when adding a sentence into a snippet...')
+
                     data[arg[idx].id] = new_index
                     indices[idx] = new_index
         return indices
