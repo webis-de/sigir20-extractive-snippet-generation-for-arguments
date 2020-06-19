@@ -55,7 +55,8 @@ def create_app(test_config=None):
 
     @app.route('/snippets', methods = ['POST'])
     def api_get_snippets():
-        json_arguments = request.json['arguments']
+        json_arguments = json.loads(request.data, encoding='latin1')
+        json_arguments = json_arguments['arguments']
 
         cluster = []
         for argument in json_arguments:
