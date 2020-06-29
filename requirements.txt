@@ -9,4 +9,5 @@ seaborn
 tensorflow==2.0.1
 tensorflow_hub==0.8.0
 flask
+discreteMarkovChain==0.22
 waitress

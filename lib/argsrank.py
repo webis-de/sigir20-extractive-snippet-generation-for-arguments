@@ -8,6 +8,7 @@ import tensorflow_hub as hub
 import numpy as np
 
 from sklearn.preprocessing import MinMaxScaler
+from discreteMarkovChain import markovChain
 
 
 from flask import current_app, g
@@ -56,9 +57,6 @@ class ArgsRank:
         # self.tf_session = tf.Session(graph=g)
         # self.tf_session.run(init_op)
         self.embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-
-
-
 
 
     def power_method(self, M, epsilon):
@@ -156,7 +154,11 @@ class ArgsRank:
             sim_message = self.normalize_by_rowsum(sim)
             matrix = self.add_tp_ratio(cluster)
             M = np.array(sim_message) * (1 - self.d) + np.array(matrix) * self.d
-            p = self.power_method(M, 0.0000001)
+            
+            #p = self.power_method(M, 0.0000001)
+            mc = markovChain(M)
+            mc.computePi('power')
+            p  = mc.pi
 
             x = 0
             for i in range(len(cluster)):
@@ -166,11 +168,11 @@ class ArgsRank:
                     score_exists = True
                 for j in range(len(cluster[i].sentences)):
                     if score_exists:
-                        cluster[i].score[j] += p[x][0]
+                        cluster[i].score[j] += p[x]
                         cluster[i].score[j] = cluster[i].score[j]
 
                     else:
-                        cluster[i].score.append(p[x][0])
+                        cluster[i].score.append(p[x])
                     x += 1
                 if (len(cluster[i].score) > 1):
                     cluster[i].score = list(
