@@ -27,18 +27,16 @@ dictConfig({
 })
 
 
-def load_global_data():
+def load_global_data(app):
     global snippet_gen_app
     global stored_snippets
 
-    snippet_gen_app = argsrank.ArgsRank()
+    snippet_gen_app = argsrank.ArgsRank(app)
 
     script_dir = os.path.dirname(__file__)
     stored_snippets = json.load(open(os.path.join(script_dir, "./data/snippets.txt")))
 
 def create_app(test_config=None):
-
-    load_global_data()
 
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -46,6 +44,8 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'argsrank.sqlite'),
     )
+
+    load_global_data(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -86,7 +86,7 @@ def create_app(test_config=None):
         #log argument ids
         app.logger.info('Body: %s', '\t'.join([arg.id for arg in cluster]))
 
-        snippets = snippet_gen_app.generate_snippet(stored_snippets, cluster)
+        snippets = snippet_gen_app.generate_snippet(cluster)
 
         js = json.dumps(snippets)
         resp = Response(js, status=200, mimetype='application/json')

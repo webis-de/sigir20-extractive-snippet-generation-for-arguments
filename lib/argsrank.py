@@ -16,7 +16,7 @@ from flask import current_app, g
 
 class ArgsRank:
 
-    def __init__(self):
+    def __init__(self, flask_app):
         script_dir = os.path.dirname(__file__)
         f = open(os.path.join(script_dir,"../data/ClaimLexicon.txt"))
         self.claim_markers = f.read().split(", ")
@@ -40,7 +40,7 @@ class ArgsRank:
 
 
         self.d = 0.15
-
+        self.flask_app = flask_app
         self.scaler = MinMaxScaler()
 
 
@@ -183,13 +183,14 @@ class ArgsRank:
 
 
 
-    def find_span(arg_txt, sent_txt):
+    def find_span(self, arg_txt, sent_txt):
         try:
-            p = re.compile(sent_txt)
+            p = re.compile(re.escape(sent_txt))
             m = p.search(arg_txt)
             return list(m.span())
         except Exception as e:
-            app.logger.error(str(e))
+            self.flask_app.logger.info('Failed in matching sentence in argument..')
+            self.flask_app.logger.error(str(e))
             return None
 
 
@@ -201,12 +202,12 @@ class ArgsRank:
 
         self.sem_similarty_scoring([args])
         for arg in args:
-            arg_text = args[idx].premises[0]["text"]
+            arg_text = arg.premises[0]["text"]
             arg_snippet = {}
 
             #processing snippet title
             snippet_title = arg.get_topK(1).tolist()[0]
-            snippet_title_span = find_span(arg_text, snippet_title)
+            snippet_title_span = self.find_span(arg_text, snippet_title)
             arg_snippet['title'] = {'span': snippet_title_span, 'text': snippet_title}
 
 
@@ -216,10 +217,10 @@ class ArgsRank:
             snippet_body = []
             for sentence in snippet_body_sentences:
                 try:
-                    sentence_span = find_span(arg_text, sentence)
+                    sentence_span = self.find_span(arg_text, sentence)
                     snippet_body.append({'span': sentence_span, 'text': sentence})
                 except Exception as e:
-                    app.logger.error(str(e))
+                    self.flask_app.logger.error(str(e))
 
             arg_snippet['body'] = snippet_body
 
