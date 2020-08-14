@@ -183,40 +183,51 @@ class ArgsRank:
 
 
 
+    def find_span(arg_txt, sent_txt):
+        try:
+            p = re.compile(sent_txt)
+            m = p.search(arg_txt)
+            return list(m.span())
+        except Exception as e:
+            app.logger.error(str(e))
+            return None
 
 
-    def generate_snippet(self, data, arg):
+    def generate_snippet(self, args):
 
         self.d = 0.15
 
-        indices = []
+        output = []
 
-        for a in arg:
-            if a.id in data:
-                indices.append(data[a.id])
-            else:
-                indices.append(None)
+        self.sem_similarty_scoring([args])
+        for arg in args:
+            arg_text = args[idx].premises[0]["text"]
+            arg_snippet = {}
 
-        if None in indices:
-            self.sem_similarty_scoring([arg])
-            for idx in range(len(indices)):
-                if indices[idx] is None:
-                    print(idx)
-                    snippet = arg[idx].get_topK(2).tolist()
-                    new_index = []
-                    for sentence in snippet:
-                        try:
-                            p = re.compile(sentence)
-                            m = p.search(arg[idx].premises[0]["text"])
-                            #TODO sometimes m is been returned as None
-                            if m != None:
-                                new_index.append(list(m.span()))
-                        except:
-                            print('Error occured when adding a sentence into a snippet...')
+            #processing snippet title
+            snippet_title = arg.get_topK(1).tolist()[0]
+            snippet_title_span = find_span(arg_text, snippet_title)
+            arg_snippet['title'] = {'span': snippet_title_span, 'text': snippet_title}
 
-                    data[arg[idx].id] = new_index
-                    indices[idx] = new_index
-        return indices
+
+            #processing snippet body
+            snippet_body_sentences  = arg.get_topK(2).tolist()
+
+            snippet_body = []
+            for sentence in snippet_body_sentences:
+                try:
+                    sentence_span = find_span(arg_text, sentence)
+                    snippet_body.append({'span': sentence_span, 'text': sentence})
+                except Exception as e:
+                    app.logger.error(str(e))
+
+            arg_snippet['body'] = snippet_body
+
+
+            output.append(arg_snippet)
+
+
+        return output
 
 def init_snippet_gen_app():
     g.snippet_gen_app = ArgsRank()

@@ -8,6 +8,24 @@ from flask import Response
 from argsrank.lib import argsrank
 from argsrank.lib.argument import Argument
 
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers': {'wsgi': {
+        'class': 'logging.StreamHandler',
+        'stream': 'ext://flask.logging.wsgi_errors_stream',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
+    }
+})
+
 
 def load_global_data():
     global snippet_gen_app
@@ -46,8 +64,7 @@ def create_app(test_config=None):
 
     @app.before_request
     def log_the_request():
-        app.logger.debug('Headers: %s', request.headers)
-        app.logger.debug('Body: %s', request.get_data())
+        app.logger.info('Headers: %s', request.headers)
 
     @app.route('/')
     def api_root():
@@ -66,7 +83,9 @@ def create_app(test_config=None):
             arg.set_sentences(argument["text"])
             cluster.append(arg)
 
-        print('generate snippets...')
+        #log argument ids
+        app.logger.info('Body: %s', '\t'.join([arg.id for arg in cluster]))
+
         snippets = snippet_gen_app.generate_snippet(stored_snippets, cluster)
 
         js = json.dumps(snippets)
