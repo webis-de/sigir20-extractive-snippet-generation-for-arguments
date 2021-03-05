@@ -21,7 +21,7 @@ Milad Alshomary, Nick Düsterhus, Henning Wachstmuth
 ### Running Code on Docker:
     Execute   ./start.sh
 
-    RUN CUDA_VISIBLE_DEVICES=2 waitress-serve --listen=0.0.0.0:5000  --call 'argsrank:create_app' >info.log 2> error.log
+    RUN CUDA_VISIBLE_DEVICES=2 waitress-serve --listen=0.0.0.0:5000  --call 'argsrank:create_app' >info.log 2> error.log &
 
 
 ### Sending http request to generate snippets:

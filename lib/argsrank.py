@@ -39,7 +39,7 @@ class ArgsRank:
 
 
 
-        self.d = 0.15
+        self.d = 0.5 #TODO: Figure out the best value for this param..
         self.flask_app = flask_app
         self.scaler = MinMaxScaler()
 
@@ -196,7 +196,6 @@ class ArgsRank:
 
     def generate_snippet(self, args):
 
-        self.d = 0.15
 
         output = []
 
