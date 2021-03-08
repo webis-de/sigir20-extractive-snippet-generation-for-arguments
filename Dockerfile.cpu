@@ -1,0 +1,21 @@
+FROM tensorflow/tensorflow:2.4.1
+
+EXPOSE 5000
+
+RUN useradd -ms /bin/bash argsrank
+RUN pip install --upgrade setuptools pip
+RUN mkdir /app
+COPY requirements.txt /app/
+RUN pip install -r /app/requirements.txt
+RUN python -c "import nltk; nltk.download('punkt', download_dir='/usr/nltk_data')"
+RUN python -m spacy download en_core_web_sm
+
+RUN mkdir /app/argsrank
+COPY . /app/argsrank/
+RUN pip install /app/argsrank/
+
+USER argsrank
+WORKDIR /home/argsrank
+RUN ln -s /app/argsrank
+CMD waitress-serve --listen=0.0.0.0:5000 --call 'argsrank:create_app'
+
