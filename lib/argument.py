@@ -1,4 +1,5 @@
 from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
 import numpy as np
 import re
 import nltk
@@ -42,6 +43,9 @@ class Argument:
         #     self.sentences = client.annotate(text, output_format="serialized").sentence  # sent_tokenize(text)
         #     self.sentences = [clean(corenlp.to_text(s)) for s in self.sentences]
         self.sentences = sent_tokenize(text)
+
+        #Remove sentences that are less than 3 words length
+        self.sentences = [sen for sen in self.sentences if len(word_tokenize(sen)) > 2]
 
     @classmethod
     def from_json(cls, data, cluster_map=None):
