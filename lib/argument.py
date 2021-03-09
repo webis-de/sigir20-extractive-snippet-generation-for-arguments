@@ -3,7 +3,6 @@ from nltk.tokenize import word_tokenize
 import numpy as np
 import re
 import nltk
-import corenlp
 
 class Argument:
 
@@ -35,15 +34,11 @@ class Argument:
 
     def set_sentences(self, text):
         """
-        Split text into list of sentences using StanfordCoreNLP
+        Split text into list of sentences using NLTK
         :param text:
         :return:
         """
-        # with corenlp.CoreNLPClient(annotators="ssplit".split()) as client:
-        #     self.sentences = client.annotate(text, output_format="serialized").sentence  # sent_tokenize(text)
-        #     self.sentences = [clean(corenlp.to_text(s)) for s in self.sentences]
         self.sentences = sent_tokenize(text)
-
         #Remove sentences that are less than 3 words length
         self.sentences = [sen for sen in self.sentences if len(word_tokenize(sen)) > 2]
 
