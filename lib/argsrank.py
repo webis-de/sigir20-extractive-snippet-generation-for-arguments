@@ -151,9 +151,9 @@ class ArgsRank:
             message_embedding = [ message.numpy() for message in self.embed(messages)] #self.tf_session.run(self.embed_result, feed_dict={self.text_input: messages})
 
             sim = np.inner(message_embedding, message_embedding)
-            sim_message = self.normalize_by_rowsum(sim)
+            #sim_message = self.normalize_by_rowsum(sim)
             matrix = self.add_tp_ratio(cluster)
-            M = np.array(sim_message) * (1 - self.d) + np.array(matrix) * self.d
+            M = np.array(sim) * (1 - self.d) + np.array(matrix) * self.d
             
             #p = self.power_method(M, 0.0000001)
             mc = markovChain(M)
