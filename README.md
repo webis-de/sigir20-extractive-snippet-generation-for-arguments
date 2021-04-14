@@ -20,8 +20,8 @@ Milad Alshomary, Nick Düsterhus, Henning Wachstmuth
 
 ## CPU
 ```
-sudo docker build -f Dockerfile.cpu -t webis/args-snippet-gen:1.1.0-cpu .
-sudo docker run --rm -it -p 5000:5000 webis/args-snippet-gen:1.1.0-cpu
+sudo docker build -f Dockerfile.cpu -t webis/args-snippet-gen:1.1.1-cpu .
+sudo docker run --rm -it -p 5000:5000 webis/args-snippet-gen:1.1.1-cpu
 ```
 
 
