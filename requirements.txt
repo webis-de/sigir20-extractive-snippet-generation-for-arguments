@@ -9,4 +9,4 @@ tensorflow==2.0.1
 tensorflow_hub==0.8.0
 flask==1.1.2
 discreteMarkovChain==0.22
-waitress==1.4.4
+waitress==2.1.1
