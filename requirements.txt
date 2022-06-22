@@ -1,5 +1,5 @@
 setuptools
-numpy==1.18
+numpy==1.22.0
 scipy==1.1.0
 scikit-learn==0.21.3
 spacy==2.3.2
