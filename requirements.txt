@@ -7,6 +7,6 @@ nltk==3.5
 seaborn==0.9.1
 tensorflow==2.0.1
 tensorflow_hub==0.8.0
-flask==1.1.2
+flask==2.3.2
 discreteMarkovChain==0.22
 waitress==1.4.4
